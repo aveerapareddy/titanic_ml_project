@@ -5,16 +5,15 @@ import numpy as np
 
 app = Flask(__name__)
 
-# Allow both local development (localhost) and deployed Vercel frontend
-allowed_origins = [
+# Allowed frontend origins
+ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://titanic-ml-project-9ca5q1l2l-aveerapareddys-projects.vercel.app"
 ]
 
-CORS(app, resources={r"/predict": {"origins": allowed_origins}}, supports_credentials=True)
+CORS(app, resources={r"/predict": {"origins": ALLOWED_ORIGINS}}, supports_credentials=True)
 
 model = joblib.load("model/titanic_model.pkl")
-
 
 @app.route("/predict", methods=["POST", "OPTIONS"])
 def predict():
@@ -39,20 +38,19 @@ def predict():
     response = jsonify({"prediction": prediction, "probability": round(probability * 100, 2)})
     return _corsify_actual_response(response)
 
-
 def _corsify_actual_response(response):
-    """Ensure CORS headers are added to every response"""
-    response.headers.add("Access-Control-Allow-Origin", ", ".join(allowed_origins))
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-    response.headers.add("Access-Control-Allow-Methods", "OPTIONS, POST, GET")
+    """Set dynamic CORS headers based on request origin"""
+    origin = request.headers.get("Origin")
+    if origin in ALLOWED_ORIGINS:
+        response.headers["Access-Control-Allow-Origin"] = origin
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+    response.headers["Access-Control-Allow-Methods"] = "OPTIONS, POST, GET"
     return response
-
 
 def _build_cors_preflight_response():
     """Handle CORS preflight OPTIONS requests"""
     response = jsonify({"message": "CORS preflight OK"})
     return _corsify_actual_response(response)
-
 
 if __name__ == "__main__":
     app.run(debug=True)
