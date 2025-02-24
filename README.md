@@ -18,7 +18,7 @@ A machine learning-powered web app that predicts whether a Titanic passenger wou
 
 ## Live Demo
 - **Frontend (UI):** [Front End](https://titanic-ml-project-9ca5q1l2l-aveerapareddys-projects.vercel.app/)
-- **API Endpoint:** [Backend](https://titanic-ml-project-1.onrender.com))
+- **API Endpoint:** [Backend](https://titanic-ml-project-1.onrender.com)
 
 ## Getting Started
 ### **1️⃣ Backend (Flask API)**
