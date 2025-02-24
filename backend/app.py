@@ -5,8 +5,13 @@ import numpy as np
 
 app = Flask(__name__)
 
-# Allow all origins for debugging (Change this to a specific domain for production)
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+# Allow both local development (localhost) and deployed Vercel frontend
+allowed_origins = [
+    "http://localhost:5173",
+    "https://titanic-ml-project-9ca5q1l2l-aveerapareddys-projects.vercel.app"
+]
+
+CORS(app, resources={r"/predict": {"origins": allowed_origins}}, supports_credentials=True)
 
 model = joblib.load("model/titanic_model.pkl")
 
@@ -36,15 +41,15 @@ def predict():
 
 
 def _corsify_actual_response(response):
-    """Attach CORS headers to responses"""
-    response.headers.add("Access-Control-Allow-Origin", "*")
+    """Ensure CORS headers are added to every response"""
+    response.headers.add("Access-Control-Allow-Origin", ", ".join(allowed_origins))
     response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
     response.headers.add("Access-Control-Allow-Methods", "OPTIONS, POST, GET")
     return response
 
 
 def _build_cors_preflight_response():
-    """Handle CORS preflight requests"""
+    """Handle CORS preflight OPTIONS requests"""
     response = jsonify({"message": "CORS preflight OK"})
     return _corsify_actual_response(response)
 
