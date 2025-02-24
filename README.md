@@ -2,6 +2,9 @@
 
 A machine learning-powered web app that predicts whether a Titanic passenger would have survived based on their details. Built with Flask for the backend and React with Tailwind CSS for the frontend.
 
+![image](https://github.com/user-attachments/assets/7c7498d0-626d-4c13-bf8b-b27de97f392a)
+
+
 ## Features
 - **Machine Learning Model:** Logistic Regression trained on Titanic dataset.
 - **Survival Probability Score:** Displays survival chance in percentage.
